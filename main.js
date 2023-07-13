@@ -3,6 +3,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const https = require('https');
 const { exec } = require('child_process');
+const readlineSync = require('readline-sync');
 
 const ScriptVersion = 1.2;
   
@@ -24,13 +25,13 @@ function build() {
                                         
         `;
 
-    const lines = TEXT.split('\n');
-    const gradientSteps = lines[0].trim().length - 1;
+    const maxLineLength = Math.max(...TEXT.split('\n').map((line) => line.trim().length));
+    const gradientSteps = TEXT.trim().split('\n')[0].length - 1;
     const rInc = (0 - 160) / gradientSteps;
     const gInc = (130 - 190) / gradientSteps;
     const bInc = (180 - 220) / gradientSteps;
-
-    lines.forEach((line) => {
+    
+    TEXT.split('\n').forEach((line) => {
       let coloredLine = ' '.repeat(35);
       for (let i = 0; i < line.length; i++) {
         const r = Math.floor(160 + rInc * i);
@@ -39,18 +40,16 @@ function build() {
         const colorCode = `\x1b[38;2;${r};${g};${b}m`;
         coloredLine += `${colorCode}${line[i]}`;
       }
-      coloredLine += '\x1b[0m';
-      console.log(coloredLine);
+      console.log(coloredLine + '\x1b[0m');
     });
   }
-
   function printSelection() {
     const WelcomeText = 'Welcome To CTP Utilities!';
     const ChoiceText = `
-        1) Login
-        2) Register
-        4) Account info
-        3) Credit
+      1) Login
+      2) Register
+      3) Account info
+      4) Credit
         `;
 
     const gradientSteps = WelcomeText.length - 1;
@@ -70,9 +69,6 @@ function build() {
 
     const lines = ChoiceText.split('\n');
     lines.forEach((line) => {
-      if (line.trim().startsWith('1) Login')) {
-        process.stdout.write(' '.repeat(20));
-      }
       let coloredLine = '';
       for (let i = 0; i < line.length; i++) {
         const r = Math.floor(255 - rInc * i);
@@ -213,13 +209,13 @@ function build() {
   console.log('\n');
   const choice = inputChoice();
   if (!isNaN(choice) && parseInt(choice) > 0 && parseInt(choice) < 5) {
-    if (choice === '3') {
+    if (choice === '4') {
       printCredits();
     } else if (choice === '1') {
       console.log('Logging in...');
     } else if (choice === '2') {
       console.log('Registering...');
-    } else if (choice === '4') {
+    } else if (choice === '3') {
       printInfo();
     }
   } else {
@@ -249,7 +245,7 @@ function downloadFile(url, filePath) {
       fs.writeFileSync(filePath, Buffer.from(response.data, 'binary'));
       printGradient('Successfully downloaded new version!', [219, 255, 219], [5, 255, 5], 42);
       printGradient('Restarting file...', [168, 209, 255], [43, 146, 255], 52);
-      setTimeout(() => reopenFile(filePath), 3000);
+      setTimeout(() => reopenFile(filePath), 2000);
     })
     .catch((error) => {
       printGradient(`Failed to download file | ${error.response.status}`, [255, 207, 207], [255, 59, 59], 45);
