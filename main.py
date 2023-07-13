@@ -2,8 +2,11 @@ import requests
 import hashlib
 import os
 import math
+import time
+import sys
+import subprocess
 
-ScriptVersion = 2
+ScriptVersion = 1.1
 
 def build():
     def clear():
@@ -221,6 +224,9 @@ def download_file(url, file_path):
         with open(file_path, 'wb') as file:
             file.write(response.content)
         print_gradient("Successfully downloaded new version!", (219, 255, 219), (5, 255, 5), 42)
+        print_gradient("Restarting file...", (168, 209, 255), (43, 146, 255), 52)
+        time.sleep(3)
+        reopen_file(file_path)
     else:
         print_gradient(f"Failed to download file | {response.status_code}", (255, 207, 207), (255, 59, 59), 45)
 
@@ -231,6 +237,7 @@ def update_file(remote_url, local_file_path):
     if hashlib.md5(remote_content.encode('utf-8')).hexdigest() != local_md5:
         print_gradient("New version available!", (219, 255, 219), (5, 255, 5), 49)
         print_gradient("Updating the file", (255, 255, 224), (255, 255, 0), 51)
+        time.sleep(1)
         download_file(remote_url, local_file_path)
     else:
         build()
@@ -240,6 +247,12 @@ def calculate_md5(file_path):
         data = file.read()
         return hashlib.md5(data).hexdigest()
 
+def reopen_file(file_path):
+    if sys.platform.startswith('win32'):
+        os.startfile(file_path)
+    elif sys.platform.startswith('linux') or sys.platform.startswith('darwin'):
+        opener = 'open' if sys.platform == 'darwin' else 'xdg-open'
+        subprocess.call([opener, file_path])
 
 remote_url = "https://raw.githubusercontent.com/cryst1e/RobloxScripts/main/main.py"
 local_file_path = "main.py"
@@ -271,4 +284,7 @@ for line in Updater.split("\n"):
     print("\033[0m")
 
 print_gradient("Current Script Version: " + str(ScriptVersion), (255, 255, 224), (255, 255, 0), 47)
+time.sleep(2)
+print_gradient("Checking For Updateds", (255, 255, 224), (255, 255, 0), 49)
+time.sleep(1)
 update_file(remote_url, local_file_path)
