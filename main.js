@@ -244,8 +244,8 @@ function downloadFile(url, filePath) {
     .then((response) => {
       fs.writeFileSync(filePath, Buffer.from(response.data, 'binary'));
       printGradient('Successfully downloaded new version!', [219, 255, 219], [5, 255, 5], 42);
-      printGradient('Restarting file...', [168, 209, 255], [43, 146, 255], 52);
-      setTimeout(() => reopenFile(filePath), 2000);
+      printGradient('Please reopen the file to get the updated version!', [168, 209, 255], [43, 146, 255], 37);
+      readlineSync.question();
     })
     .catch((error) => {
       printGradient(`Failed to download file | ${error.response.status}`, [255, 207, 207], [255, 59, 59], 45);
@@ -277,17 +277,6 @@ function updateFile(remoteUrl, localFilePath) {
 function calculateMd5(filePath) {
   const data = fs.readFileSync(filePath);
   return crypto.createHash('md5').update(data).digest('hex');
-}
-
-function reopenFile(filePath) {
-  exec(`node ${filePath}`, (error, stdout, stderr) => {
-    if (error) {
-      printGradient(`Error occurred while executing the file: ${error}`, [255, 207, 207], [255, 59, 59], 30);
-      return;
-    }
-    console.log(stdout);
-    console.error(stderr);
-  });
 }
 
 const remoteUrl = 'https://raw.githubusercontent.com/cryst1e/RobloxScripts/main/main.js';
