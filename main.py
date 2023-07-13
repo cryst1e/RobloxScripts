@@ -1,3 +1,3 @@
-version = 1
+version = 2
 
 print("Script Version: "+version)
