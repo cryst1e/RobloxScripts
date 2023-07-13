@@ -4,7 +4,7 @@ const fs = require('fs');
 const https = require('https');
 const { exec } = require('child_process');
 
-const ScriptVersion = 1.1;
+const ScriptVersion = 1.2;
 
 function build() {
   function clear() {
