@@ -5,7 +5,7 @@ const https = require('https');
 const { exec } = require('child_process');
 
 const ScriptVersion = 1.2;
-
+  
 function build() {
   function clear() {
     console.clear();
@@ -294,7 +294,7 @@ function reopenFile(filePath) {
   });
 }
 
-const remoteUrl = 'https://raw.githubusercontent.com/cryst1e/RobloxScripts/main/main.py';
+const remoteUrl = 'https://raw.githubusercontent.com/cryst1e/RobloxScripts/main/main.js';
 const localFilePath = 'main.js';
 
 console.clear();
