@@ -6,7 +6,7 @@ import time
 import sys
 import subprocess
 
-ScriptVersion = 1.1
+ScriptVersion = 1.2
 
 def build():
     def clear():
@@ -240,6 +240,8 @@ def update_file(remote_url, local_file_path):
         time.sleep(1)
         download_file(remote_url, local_file_path)
     else:
+        print_gradient("Version Up To Data!", (219, 255, 219), (5, 255, 5), 50)
+        time.sleep(2)
         build()
 
 def calculate_md5(file_path):
